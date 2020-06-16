@@ -16,3 +16,5 @@ Route::get('/', function () {
 });
 
 Route::get('test/hello','TestController@hello');
+
+Route::get('goods/detail','Goods\GoodsController@detail'); //商品详情
