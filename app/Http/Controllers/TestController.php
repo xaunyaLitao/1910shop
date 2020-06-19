@@ -18,6 +18,5 @@ class TestController extends Controller
         $key="name1";
         $val1 = Redis::get($key);
         echo '$val1: '.$val1;
-        echo 1234;
     }
 }
