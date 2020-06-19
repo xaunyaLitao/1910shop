@@ -15,7 +15,7 @@ class TestController extends Controller
     // redis测试
     public function redis1()
     {
-        $key="name2";
+        $key="name1";
         $val1 = Redis::get($key);
         echo '$val1: '.$val1;
     }
