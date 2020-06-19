@@ -12,9 +12,14 @@
 */
 
 Route::get('/', function () {
+    phpinfo();die;
     return view('welcome');
 });
 
 Route::get('test/hello','TestController@hello');
+Route::get('test/redis1','TestController@redis1'); //redis 测试
+
+
 
 Route::get('goods/detail','Goods\GoodsController@detail'); //商品详情
+
