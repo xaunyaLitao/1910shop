@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>用户中心</title>
+    <title>个人中心</title>
 </head>
 <body>
-用户中心
+个人中心
 </body>
 </html>
