@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>个人中心</title>
+    <title>用户中心</title>
 </head>
 <body>
-个人中心
+用户中心<br>
+{{$_COOKIE['name']}},欢迎回来
 </body>
 </html>

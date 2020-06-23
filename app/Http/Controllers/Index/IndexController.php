@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Index;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Model\UserModel;
+use Illuminate\Support\Facades\Cookie;
 class IndexController extends Controller
 {
     // 前台注册
@@ -19,7 +20,7 @@ class IndexController extends Controller
         return view('index.login');
     }
     
-    // 注册
+    // 用户注册逻辑
     public function regdo(Request $request)
     {
         // 接收值
@@ -84,17 +85,29 @@ class IndexController extends Controller
         // 验证密码
         $res=password_verify($password,$user->password);
         if($res){
-            header('Refresh:2;url=/user/center');
+            // 向客户端设置cookie
+            // setcookie('uid',$user->user_id,time()+3600,'/');
+            setcookie('name',$user->user_name,time()+3600,'/');
+            Cookie::queue('uid',$user->user_id,10);
             echo "登录成功";
+            header('Refresh:2;url=/user/center');
         }else{
-            echo "用户名与密码不一致,请重新登录";
             header('Refresh:2;url=/user/login');
+            echo "用户名与密码不一致,请重新登录";
         }
     }
 
     // 用户中心
     public function center()
     {
-        return view('index.center');
+        // 判断用户是否登录,判断是否有uid和name字段
+        // echo '<pre>';print_r($_COOKIE);echo '</pre>';
+
+        if(Cookie::has('uid')){
+            return view('index/center');
+        }else{
+            echo "未登录";
+            return redirect('user/login');
+        }
     }
 }
