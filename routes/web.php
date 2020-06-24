@@ -36,3 +36,8 @@ Route::post('user/logindo','Index\IndexController@logindo'); //前台登录路�
 
 
 Route::get('user/center','Index\IndexController@center'); //用户中心
+
+
+
+// api
+Route::post('api/user/reg','Api\UserController@reg'); //注册
