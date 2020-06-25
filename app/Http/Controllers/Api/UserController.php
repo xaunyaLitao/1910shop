@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use App\Model\UserModel;
 use App\Model\TokenModel;
+use Illuminate\Support\Facades\Redis;
 class UserController extends Controller
 {
         // 用户注册
@@ -103,13 +104,17 @@ class UserController extends Controller
             $str= $user->user_id . $user->user_name . time();
             $token =substr(md5($str),10,16) . substr(md5($str),0,10);
 
-            // 保存token,后续验证使用
-            $data=[
-                'uid'=>$user->user_id,
-                'token'=>$token
-            ];
+            // // 保存token,后续验证使用
+            // $data=[
+            //     'uid'=>$user->user_id,
+            //     'token'=>$token
+            // ];
 
-            TokenModel::insert($data);
+            // TokenModel::insert($data);  //保存一份token
+
+            
+            // 将token保存在redis中
+            Redis::set($token,$user->user_id);
 
             $response=[
                 'erron'=>0,
@@ -129,16 +134,15 @@ class UserController extends Controller
     // 个人中心
     public function center()
     {
-        // 判断用户是否登录,判断是否有uid和name字段
-
+        // 判断用户是否登录,判断是否有uid字段
         $token=$_GET['token'];
 
         // 检查token是否有效
-        $res=TokenModel::where(['token'=>$token])->first();
+        $uid=Redis::get($token);
 
-        if($res)
+        if($uid)
         {
-            $uid=$res->uid;
+           
             $user_info=UserModel::find($uid);
             // 已登录
              echo $user_info->user_name ."欢迎来到个人中心";
