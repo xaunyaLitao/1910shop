@@ -19,6 +19,7 @@ class CheckPri
       
     //   验证token是否有效
     $uid=Redis::get($token);
+    
     if(!$uid){
         $response=[
             'erron'=>40009,

@@ -2,6 +2,8 @@
 
 namespace App\Http;
 use App\Http\Middleware\CheckPri;
+use App\Http\Middleware\TestMiddleware;
+use App\Http\Middleware\AccessFilter;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -62,6 +64,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'check.pri'=>CheckPri::class, //鉴权中间件
+        'access.filter'=>AccessFilter::class, //防刷中间件
     ];
 
     /**
