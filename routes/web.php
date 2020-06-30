@@ -17,11 +17,20 @@ Route::get('/', function () {
 });
 
 // 测试
-Route::get('test/hello','TestController@hello');
+Route::prefix('/test')->group(function(){
+    Route::get('/hello','TestController@hello');
+    Route::get('/sign1','TestController@sign1');
+    Route::get('/www','TestController@www');
+    Route::get('/sendData','TestController@sendData');
+    Route::get('/post-data','TestController@postData');
+    Route::get('/encrypt1','TestController@encrypt1');  //对称加密
+});
+
+
+
 Route::get('/test1','TestController@test1'); //redis 测试
-Route::get('/test/sign1','TestController@sign1');
 Route::get('/secret','TestController@secret');
-Route::get('/test/www','TestController@www');
+
 
 
 Route::get('goods/detail','Goods\GoodsController@detail'); //商品详情

@@ -74,4 +74,103 @@ class TestController extends Controller
         $response=file_get_contents($url);
         echo $response;
     }
+
+
+
+    public function sendData()
+    {
+       $url='http://api.1910.com/test/receive?name=zhangsan&age=10';  //要调用的接口地址
+        $response=file_get_contents($url);
+        echo $response;
+    }
+
+
+    //向接口post数据 
+    public function postData()
+    {
+        $data= [
+            'user_name'=>'wangwu',
+            'user_age'=>333
+        ];
+
+        
+
+        $url='http://api.1910.com/test/receive-post';
+        // 使用curl post数据
+        // 1.实例化
+        $ch=curl_init();
+
+        // 2.配置参数
+        curl_setopt($ch,CURLOPT_URL,$url);
+        curl_setopt($ch,CURLOPT_POST,1);  //使用post方式
+        curl_setopt($ch,CURLOPT_POSTFIELDS,$data);
+        curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+
+        // 3.开启会话
+       $response= curl_exec($ch);
+
+        // 4.检测错误
+        $errno=curl_errno($ch);  //错误码
+        $errmsg=curl_error($ch);
+        
+        if($errno){
+            echo '错误码:'.$errno;echo '</br>';
+            var_dump($errmsg);die;
+        }
+
+        curl_close($ch);
+        echo $response;
+    }
+
+
+    // 对称加密
+    public function encrypt1()
+    {
+        $data='长江,长江,我是黄河'; 
+        $method='AES-256-CBC';    //加密算法
+        $key='1910api';   //加密秘钥
+        $iv='hellohelloABCDEF';   //初始向量
+
+        // 加密数据
+        $enc_data=openssl_encrypt($data,$method,$key,OPENSSL_RAW_DATA,$iv);
+
+        $sign=sha1($enc_data.$key);  //签名
+
+        // echo "加密的密文:".$enc_data;echo '</br>';
+
+        // 组合post的数据
+        $post_data=[
+            'data'=>$enc_data,
+            'sign'=>$sign
+        ];
+
+        // 将密文发送至对端 post
+        $url='http://api.1910.com/test/decrypt1';
+        // 使用curl post数据
+        // 1.实例化
+        $ch=curl_init();
+
+        // 2.配置参数
+        curl_setopt($ch,CURLOPT_URL,$url);  //post地址
+        curl_setopt($ch,CURLOPT_POST,1);  //使用post方式发送数据
+        curl_setopt($ch,CURLOPT_POSTFIELDS,$post_data);  //post的数据
+        curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);  //通过变量接收响应
+
+        // 3.开启会话 （发送请求）
+       $response= curl_exec($ch);  //接收响应
+       echo $response;
+
+        // 4.捕捉错误
+        $errno=curl_errno($ch);  //错误码
+        if($errno){
+            $errmsg=curl_error($ch);
+            var_dump($errmsg);die;
+        }
+
+
+        // 关闭连接
+
+        curl_close($ch);
+
+    }
 }
