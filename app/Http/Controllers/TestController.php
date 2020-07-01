@@ -169,8 +169,59 @@ class TestController extends Controller
 
 
         // 关闭连接
-
         curl_close($ch);
 
+    }
+
+
+
+    // 非对称加密
+    public function rsaEncrypt1()
+    {
+        $data='上山打老虎';   //待加密
+
+        // 使用公钥加密
+        $key_content=file_get_contents(storage_path('keys/pub.key'));  //读取公钥的内容
+        $pub_key=openssl_get_publickey($key_content);
+        openssl_public_encrypt($data,$enc_data,$pub_key);  //加密
+        var_dump($enc_data);
+        echo '<hr>';
+
+        // 私钥解密
+        $key_content=file_get_contents(storage_path('keys/priv.key'));  //读取私钥的信息
+        $priv_key=openssl_get_privatekey($key_content);  //获取私钥
+        openssl_private_decrypt($enc_data,$dec_data,$priv_key);  //解密的结果在$dec_data
+        var_dump($dec_data);
+          
+    }
+
+    public function sendB()
+    {
+        $data="天王盖地虎";
+
+        // 公钥加密
+        $key=openssl_get_publickey(file_get_contents(storage_path('keys/b_pub.key')));  //获取对方（b）的公钥
+
+        openssl_public_encrypt($data,$enc_data,$key);
+
+        // base64编码 密文
+        $base64_data=base64_encode($enc_data);
+        
+        $url='http://api.1910.com/get-a?data='.urlencode($base64_data);
+
+
+        // 接收响应
+        $response=file_get_contents($url);
+        // echo 'response:'.$response;
+
+        $json_arr=json_decode($response,true);
+
+        $base64_data=$json_arr['data'];
+        $enc_data=base64_decode($base64_data);  //密文
+
+        // 解密
+        $key=openssl_get_privatekey(file_get_contents(storage_path('keys/a_priv.key')));
+        openssl_private_decrypt($enc_data,$dec_data,$key);
+        echo $dec_data;die;
     }
 }

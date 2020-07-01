@@ -24,6 +24,8 @@ Route::prefix('/test')->group(function(){
     Route::get('/sendData','TestController@sendData');
     Route::get('/post-data','TestController@postData');
     Route::get('/encrypt1','TestController@encrypt1');  //对称加密
+    Route::get('/rsa/encrypt1','TestController@rsaEncrypt1');  //非对称加密
+    Route::get('/rsa/send-b','TestController@sendB');
 });
 
 
